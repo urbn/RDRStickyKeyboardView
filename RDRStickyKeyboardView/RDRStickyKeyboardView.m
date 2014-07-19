@@ -206,13 +206,10 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
 #define RDR_KEYBOARD_INPUT_VIEW_MARGIN_HORIZONTAL                   8
 #define RDR_KEYBOARD_INPUT_VIEW_MARGIN_BUTTONS_VERTICAL             7
 
-@interface RDRKeyboardInputView () {
+@interface RDRKeyboardInputView () <UITextViewDelegate>{
     UITextView *_textView;
     UIButton *_rightButton;
 }
-
-@property (nonatomic, strong, readonly) UIToolbar *toolbar;
-
 @end
 
 @implementation RDRKeyboardInputView
@@ -260,6 +257,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     }
     
     _textView = [UITextView new];
+    _textView.delegate = self;
     self.textView.font = [UIFont systemFontOfSize:15.0f];
     self.textView.layer.cornerRadius = 5.0f;
     self.textView.layer.borderWidth = 1.0f;
@@ -276,13 +274,8 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     if (_rightButton != nil) {
         return _rightButton;
     }
-    
     _rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _rightButton.titleLabel.font = [UIFont systemFontOfSize:14.0f];
-    
-    [_rightButton setTitle:NSLocalizedString(@"Send", nil)
-                  forState:UIControlStateNormal];
-    
+    [_rightButton setTitle:@"Post" forState:UIControlStateNormal];
     return _rightButton;
 }
 
@@ -310,6 +303,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     [self addSubview:self.toolbar];
     [self addSubview:self.rightButton];
     [self addSubview:self.textView];
+
     
     [self _setupConstraints];
 }
@@ -438,7 +432,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
 
 static NSInteger const RDRInterfaceOrientationUnknown   = -1;
 
-@interface RDRStickyKeyboardView () {
+@interface RDRStickyKeyboardView () <UITextViewDelegate> {
     UIInterfaceOrientation _currentOrientation;
     RDRKeyboardInputView *_inputViewKeyboard;
     RDRKeyboardInputView *_inputViewScrollView;
@@ -547,6 +541,19 @@ static NSInteger const RDRInterfaceOrientationUnknown   = -1;
     self.inputViewKeyboard.autoresizingMask = UIViewAutoresizingFlexibleWidth|
     UIViewAutoresizingFlexibleHeight;
     
+    self.inputViewScrollView.textView.delegate = self;
+    
+    
+    self.placeHolderLabel = [[UILabel alloc] init];
+    self.placeHolderLabel.textColor = [UIColor lightGrayColor];
+    self.placeHolderLabel.text = @"Add a Comment";
+    [self.placeHolderLabel sizeToFit];
+    CGRect placeHolderFrame = self.placeHolderLabel.frame;
+    placeHolderFrame.origin.x = 8.0;
+    placeHolderFrame.origin.y = self.inputViewKeyboard.frame.size.height/2.0 - 4.0 - (placeHolderFrame.size.height/2.0);
+    
+    self.placeHolderLabel.frame = placeHolderFrame;
+    [self.inputViewScrollView.textView addSubview:self.placeHolderLabel];
 }
 
 - (void)_setInitialFrames
@@ -560,6 +567,23 @@ static NSInteger const RDRInterfaceOrientationUnknown   = -1;
     scrollViewFrame.size.width = self.frame.size.width;
     scrollViewFrame.size.height = self.frame.size.height - self.inputViewScrollView.frame.size.height;
     self.scrollView.frame = scrollViewFrame;
+}
+
+#pragma mark - UItextView Delegates
+
+- (void)textViewDidBeginEditing:(UITextView *)textView
+{
+    self.placeHolderLabel.hidden = YES;
+}
+
+- (void)textViewDidChange:(UITextView *)txtView
+{
+    self.placeHolderLabel.hidden = ([txtView.text length] > 0);
+}
+
+- (void)textViewDidEndEditing:(UITextView *)txtView
+{
+    self.placeHolderLabel.hidden = ([txtView.text length] > 0);
 }
 
 #pragma mark - Notifications
