@@ -208,7 +208,6 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
 
 @interface RDRKeyboardInputView () {
     UITextView *_textView;
-    UIButton *_leftButton;
     UIButton *_rightButton;
 }
 
@@ -238,7 +237,6 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     if (self = [super initWithCoder:decoder])
     {
         _textView = [decoder decodeObjectForKey:NSStringFromSelector(@selector(textView))];
-        _leftButton = [decoder decodeObjectForKey:NSStringFromSelector(@selector(leftButton))];
         _rightButton = [decoder decodeObjectForKey:NSStringFromSelector(@selector(rightButton))];
         
         [self _setupSubviews];
@@ -250,7 +248,6 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
 - (void)encodeWithCoder:(NSCoder *)coder
 {
     [coder encodeObject:self.textView forKey:NSStringFromSelector(@selector(textView))];
-    [coder encodeObject:self.leftButton forKey:NSStringFromSelector(@selector(leftButton))];
     [coder encodeObject:self.rightButton forKey:NSStringFromSelector(@selector(rightButton))];
 }
 
@@ -272,21 +269,6 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
                                                        alpha:1.0f].CGColor;
     
     return self.textView;
-}
-
-- (UIButton *)leftButton
-{
-    if (_leftButton != nil) {
-        return _leftButton;
-    }
-    
-    _leftButton = [UIButton buttonWithType:UIButtonTypeSystem];
-    _leftButton.titleLabel.font = [UIFont systemFontOfSize:15.0f];
-    
-    [_leftButton setTitle:NSLocalizedString(@"Other", nil)
-                 forState:UIControlStateNormal];
-    
-    return _leftButton;
 }
 
 - (UIButton *)rightButton
@@ -326,8 +308,6 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     _toolbar = [UIToolbar new];
     _toolbar.translucent = YES;
     [self addSubview:self.toolbar];
-    
-    [self addSubview:self.leftButton];
     [self addSubview:self.rightButton];
     [self addSubview:self.textView];
     
@@ -345,33 +325,25 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     self.frame = newFrame;
         
     // Calculate button margin with new frame height
-    [self.leftButton sizeToFit];
     [self.rightButton sizeToFit];
     
-    CGFloat leftButtonMargin =
-    roundf((height - self.leftButton.frame.size.height) / 2.0f);
     CGFloat rightButtonMargin =
     roundf((height - self.rightButton.frame.size.height) / 2.0f);
-    
-    leftButtonMargin = roundf(leftButtonMargin);
     rightButtonMargin = roundf(rightButtonMargin);
     
     // Set autolayout property
     self.toolbar.translatesAutoresizingMaskIntoConstraints = NO;
-    self.leftButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.rightButton.translatesAutoresizingMaskIntoConstraints = NO;
     self.textView.translatesAutoresizingMaskIntoConstraints = NO;
     
     // Define constraints
     NSArray *constraints = nil;
     NSString *visualFormat = nil;
-    NSDictionary *views = @{ @"leftButton" : self.leftButton,
-                             @"rightButton" : self.rightButton,
+    NSDictionary *views = @{ @"rightButton" : self.rightButton,
                              @"textView" : self.textView,
                              @"toolbar" : self.toolbar};
     NSDictionary *metrics = @{ @"hor" : @(RDR_KEYBOARD_INPUT_VIEW_MARGIN_HORIZONTAL),
                                @"ver" : @(RDR_KEYBOARD_INPUT_VIEW_MARGIN_VERTICAL),
-                               @"leftButtonMargin" : @(leftButtonMargin),
                                @"rightButtonMargin" : @(rightButtonMargin)};
     
     constraints = [NSLayoutConstraint constraintsWithVisualFormat:@"V:|[toolbar]|"
@@ -386,14 +358,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
                                                             views:views];
     [self addConstraints:constraints];
     
-    visualFormat = @"H:|-(==hor)-[leftButton]-(==hor)-[textView]-(==hor)-[rightButton]-(==hor)-|";
-    constraints = [NSLayoutConstraint constraintsWithVisualFormat:visualFormat
-                                                          options:0
-                                                          metrics:metrics
-                                                            views:views];
-    [self addConstraints:constraints];
-    
-    visualFormat = @"V:|-(>=leftButtonMargin)-[leftButton]-(==leftButtonMargin)-|";
+    visualFormat = @"H:|-(==hor)-[textView]-(==hor)-[rightButton]-(==hor)-|";
     constraints = [NSLayoutConstraint constraintsWithVisualFormat:visualFormat
                                                           options:0
                                                           metrics:metrics
