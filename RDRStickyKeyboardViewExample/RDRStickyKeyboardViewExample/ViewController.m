@@ -58,6 +58,7 @@ static NSString * const CellIdentifier = @"cell";
     self.tableView.delegate = self;
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth
     |UIViewAutoresizingFlexibleHeight;
+    self.tableView.tableFooterView = [[UIView alloc] init];
     [self.tableView registerClass:[UITableViewCell class]
            forCellReuseIdentifier:CellIdentifier];
 
@@ -65,6 +66,12 @@ static NSString * const CellIdentifier = @"cell";
     self.contentWrapper = [[RDRStickyKeyboardView alloc] initWithScrollView:self.tableView];
     self.contentWrapper.frame = self.view.bounds;
     self.contentWrapper.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    [self.contentWrapper.inputView.rightButton setTitle:@"Post" forState:UIControlStateNormal];
+    
+    
+    self.contentWrapper.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
+    self.contentWrapper.inputView.toolbar.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
+    
     [self.view addSubview:self.contentWrapper];
 }
 
@@ -75,10 +82,10 @@ static NSString * const CellIdentifier = @"cell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier
                                                             forIndexPath:indexPath];
     
-    cell.backgroundColor = [UIColor redColor];
-    cell.contentView.backgroundColor = [UIColor redColor];
+    cell.backgroundColor = [UIColor purpleColor];
+    cell.contentView.backgroundColor = [UIColor purpleColor];
     
-    cell.textLabel.text = @"Lorem ipsum";
+    cell.textLabel.text = @"Dustin";
     cell.textLabel.textColor = [UIColor whiteColor];
     
     return cell;
@@ -86,7 +93,7 @@ static NSString * const CellIdentifier = @"cell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    return 50;
+    return 7;
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
