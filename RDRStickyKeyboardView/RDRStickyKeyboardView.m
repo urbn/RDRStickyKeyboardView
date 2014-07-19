@@ -276,6 +276,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     }
     _rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_rightButton setTitle:@"Post" forState:UIControlStateNormal];
+    [_rightButton setTintColor:[UIColor colorWithRed:255.0 green:0.0 blue:138.0 alpha:1.0]];
     return _rightButton;
 }
 
@@ -542,7 +543,6 @@ static NSInteger const RDRInterfaceOrientationUnknown   = -1;
     UIViewAutoresizingFlexibleHeight;
     
     self.inputViewScrollView.textView.delegate = self;
-    
     
     self.placeHolderLabel = [[UILabel alloc] init];
     self.placeHolderLabel.textColor = [UIColor lightGrayColor];

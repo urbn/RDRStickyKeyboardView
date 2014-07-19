@@ -66,12 +66,9 @@ static NSString * const CellIdentifier = @"cell";
     self.contentWrapper = [[RDRStickyKeyboardView alloc] initWithScrollView:self.tableView];
     self.contentWrapper.frame = self.view.bounds;
     self.contentWrapper.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
-    [self.contentWrapper.inputView.rightButton setTitle:@"Post" forState:UIControlStateNormal];
-    
-    
+
     self.contentWrapper.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
     self.contentWrapper.inputView.toolbar.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
-    
     [self.view addSubview:self.contentWrapper];
 }
 
