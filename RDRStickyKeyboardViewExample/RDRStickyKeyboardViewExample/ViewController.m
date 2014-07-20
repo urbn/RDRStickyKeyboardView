@@ -29,7 +29,7 @@
 
 static NSString * const CellIdentifier = @"cell";
 
-@interface ViewController () <UITableViewDataSource, UITableViewDelegate>
+@interface ViewController () <UITableViewDataSource, UITableViewDelegate, CommentTextViewDelegate>
 
 @property (nonatomic, strong) UITableView *tableView;
 @property (nonatomic, strong) RDRStickyKeyboardView *contentWrapper;
@@ -59,13 +59,15 @@ static NSString * const CellIdentifier = @"cell";
     self.tableView.autoresizingMask = UIViewAutoresizingFlexibleWidth
     |UIViewAutoresizingFlexibleHeight;
     self.tableView.tableFooterView = [[UIView alloc] init];
-    [self.tableView registerClass:[UITableViewCell class]
-           forCellReuseIdentifier:CellIdentifier];
+    [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:CellIdentifier];
 
     // Setup wrapper
     self.contentWrapper = [[RDRStickyKeyboardView alloc] initWithScrollView:self.tableView];
     self.contentWrapper.frame = self.view.bounds;
     self.contentWrapper.autoresizingMask = UIViewAutoresizingFlexibleHeight|UIViewAutoresizingFlexibleWidth;
+    
+    self.contentWrapper.inputView.delegate = self;
+    self.contentWrapper.inputViewScrollView.delegate = self;
 
     self.contentWrapper.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
     self.contentWrapper.inputView.toolbar.backgroundColor = [UIColor colorWithRed:246.0 green:244.0 blue:242.0 alpha:1.0];
@@ -86,6 +88,13 @@ static NSString * const CellIdentifier = @"cell";
     cell.textLabel.textColor = [UIColor whiteColor];
     
     return cell;
+}
+
+- (void)commentTextViewDidPressPostButton:(RDRKeyboardInputView *)commentView {
+    NSLog(@"Post message %@", commentView.textView.text);
+    commentView.textView.text = @"";
+    self.contentWrapper.inputView.textView.text = @"";
+    [self.contentWrapper hideKeyboard];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
