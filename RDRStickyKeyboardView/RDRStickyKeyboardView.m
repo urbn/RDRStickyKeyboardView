@@ -277,7 +277,17 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     _rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_rightButton setTitle:@"Post" forState:UIControlStateNormal];
     [_rightButton setTintColor:[UIColor colorWithRed:255.0 green:0.0 blue:138.0 alpha:1.0]];
+    [_rightButton addTarget:self action:@selector(rightButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     return _rightButton;
+}
+
+#pragma mark - Right Button Action 
+- (void)rightButtonPressed {
+    if (self.textView.text.length > 0) {
+        if([self.delegate respondsToSelector:@selector(commentTextViewDidPressPostButton:)]) {
+            [self.delegate commentTextViewDidPressPostButton:self];
+        }
+    }
 }
 
 #pragma mark - Public
@@ -303,9 +313,8 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     _toolbar.translucent = YES;
     [self addSubview:self.toolbar];
     [self addSubview:self.rightButton];
+    [_rightButton addTarget:self action:@selector(rightButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self addSubview:self.textView];
-
-    
     [self _setupConstraints];
 }
 

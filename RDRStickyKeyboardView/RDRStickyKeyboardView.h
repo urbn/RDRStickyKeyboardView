@@ -30,11 +30,21 @@
 
 #pragma mark - RDRKeyboardInputView
 
+@class RDRKeyboardInputView;
+
+@protocol CommentTextViewDelegate <NSObject>
+- (void)commentTextViewDidPressPostButton:(RDRKeyboardInputView *)commentView;
+@end
+
 @interface RDRKeyboardInputView : UIView
 @property (nonatomic, strong, readonly) UIToolbar *toolbar;
 @property (nonatomic, strong) UIButton *rightButton;
 @property (nonatomic, strong, readonly) UITextView *textView;
+@property (nonatomic, weak) id <CommentTextViewDelegate> delegate;
 @end
+
+
+
 
 #pragma mark - UIScrollView+RDRStickyKeyboardView
 
