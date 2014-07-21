@@ -258,7 +258,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     
     _textView = [UITextView new];
     _textView.delegate = self;
-    self.textView.font = [UIFont systemFontOfSize:15.0f];
+    self.textView.font = [UIFont fontWithName:@"AvenirNext-Regular" size:15.0];
     self.textView.layer.cornerRadius = 5.0f;
     self.textView.layer.borderWidth = 1.0f;
     self.textView.layer.borderColor =  [UIColor colorWithRed:200.0f/255.0f
@@ -276,7 +276,7 @@ static inline UIViewAnimationOptions RDRAnimationOptionsForCurve(UIViewAnimation
     }
     _rightButton = [UIButton buttonWithType:UIButtonTypeSystem];
     [_rightButton setTitle:@"Post" forState:UIControlStateNormal];
-    [_rightButton setTintColor:[UIColor colorWithRed:255.0 green:0.0 blue:138.0 alpha:1.0]];
+    [_rightButton setTintColor:[UIColor colorWithRed:1.0 green:0.0 blue:0.54 alpha:1.0]];
     [_rightButton addTarget:self action:@selector(rightButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     return _rightButton;
 }
@@ -555,6 +555,7 @@ static NSInteger const RDRInterfaceOrientationUnknown   = -1;
     
     self.placeHolderLabel = [[UILabel alloc] init];
     self.placeHolderLabel.textColor = [UIColor lightGrayColor];
+    [self.placeHolderLabel setFont:[UIFont fontWithName:@"AvenirNext-Regular" size:15.0]];
     self.placeHolderLabel.text = @"Add a Comment";
     [self.placeHolderLabel sizeToFit];
     CGRect placeHolderFrame = self.placeHolderLabel.frame;
